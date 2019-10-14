@@ -56,9 +56,9 @@ public class ProgressItemListAdapter extends BaseAdapter{
     	public void run(){
     		int barWidth = holder.progress_barView.getWidth();
     		int blockWidth = (int)(barWidth * itemInfo.reat * 0.01);
-            LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) holder.progress_blockView.getLayoutParams(); //取控件textView当前的布局参数 linearParams.height = 20;// 控件的高强制设成20  
+            LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) holder.progress_blockView.getLayoutParams();
             linearParams.width = blockWidth; 
-            holder.progress_blockView.setLayoutParams(linearParams); //使设置好的布局参数应用到控件
+            holder.progress_blockView.setLayoutParams(linearParams);
     		
     	}
     }
@@ -91,7 +91,7 @@ public class ProgressItemListAdapter extends BaseAdapter{
         holder.dealPercentView.setText(String.valueOf(itemInfo.reat) +"%");
         
         //int barWidth = holder.progress_barView.getWidth();
-        //measure方法的参数值都设为0即可  
+        //measure锟斤拷锟斤拷锟侥诧拷锟斤拷值锟斤拷锟斤拷为0锟斤拷锟斤拷  
         MyRunnable runable = new MyRunnable();
         runable.setViewHolder(holder, itemInfo);
         
@@ -100,7 +100,7 @@ public class ProgressItemListAdapter extends BaseAdapter{
         
 
         holder.progress_barView.post(runable);
-        //获取组件宽度  
+        //
         //holder.progress_barView
         
         

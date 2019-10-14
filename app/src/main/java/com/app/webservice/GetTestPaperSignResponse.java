@@ -36,8 +36,8 @@ public class GetTestPaperSignResponse {
 	public GetTestPaperSignResponse(String result){
 		try {
 			dataList = new ArrayList();
-			JsonParser parser=new JsonParser();  //创建JSON解析器
-			JsonObject object=(JsonObject) parser.parse(result);  //创建JsonObject对象
+			JsonParser parser=new JsonParser();  //
+			JsonObject object=(JsonObject) parser.parse(result);  //
 			this.codeid = object.get("codeid").getAsString();
 			if(Public.responseIDOK.equals(this.codeid)){
 				JsonArray jsonArr = object.get("message").getAsJsonArray();

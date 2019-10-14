@@ -78,7 +78,7 @@ public class AlreadyMarkActivity extends MainBaseActivity {
 	}
     public void checkMarkIsStart(){
     	Public pub = (Public)this.getApplication();
-        
+
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("arg0", pub.usersubjectid);
 

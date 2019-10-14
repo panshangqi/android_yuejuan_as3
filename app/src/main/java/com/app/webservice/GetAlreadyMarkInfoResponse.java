@@ -13,33 +13,33 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 /*
-(9)获取指定密号试卷的已评数据 功能：根据用户名、令牌、科目ID、试卷密号 获取信息
-函数名：GetAlreadmarkinfo(String userid,String authtoken,String subjectid,int secretid)
-返回值：代码、信息 的JSon串
-[{"codeid":"0001","message":[{"examid":"101406212","firstmark":"3","firstsmallmark":"","flag_send":1,"fullmark":8,"imgurl":"exam_d/exam_pic/ceshi/wenzong/001/101406212/6.jpg","queid":6,"quename":"第41题","scorepoints":"0,1,2,3,4,5,6,7,8","secretid":13,"smallqueinfo":[],"smallquenum":0}]}]
-[{"codeid":"0002","message":"用户信息验证失败"}]
-[{"codeid":"0003","message":"服务器数据异常"}]
+(9)
+GetAlreadmarkinfo(String userid,String authtoken,String subjectid,int secretid)
 
-返回数据在message字段下，格式为json字符串，包含的字段如下
-queid         题目ID
-quename       题目名称
-fullmark      满分
-smallquenum   小题数目
-scorepoints   给分点
-smallqueinfo  小题信息
+[{"codeid":"0001","message":[{"examid":"101406212","firstmark":"3","firstsmallmark":"","flag_send":1,"fullmark":8,"imgurl":"exam_d/exam_pic/ceshi/wenzong/001/101406212/6.jpg","queid":6,"quename":"","scorepoints":"0,1,2,3,4,5,6,7,8","secretid":13,"smallqueinfo":[],"smallquenum":0}]}]
+[{"codeid":"0002","message":""}]
+[{"codeid":"0003","message":""}]
+
+message json
+queid
+quename
+fullmark
+smallquenum
+scorepoints
+smallqueinfo
 {
-smallqueid         小题ID
-smallquename       小题名称
-smallfullmark      小题满分
-smallscorepoints   小题给分点
+smallqueid
+smallquename
+smallfullmark
+smallscorepoints
 }
 
-secretid           密号
-examid             考号
-imgurl             图片路径
-flag_send          试卷类型
-firstmark          已存总分
-firstsmallmark     已存小题分
+secretid
+examid
+imgurl
+flag_send
+firstmark
+firstsmallmark
  */
 public class GetAlreadyMarkInfoResponse {
 
@@ -64,7 +64,7 @@ public class GetAlreadyMarkInfoResponse {
 		public String flag_send;
 		public String firstmark;
 		public String firstsmallmark;
-		public String commentimage; //标注图片
+		public String commentimage; //
 		public List<SmallQueInfo> smallqueinfoList;
 		
 	}
@@ -83,8 +83,8 @@ public class GetAlreadyMarkInfoResponse {
 	public GetAlreadyMarkInfoResponse(String result){
 		dataList = new ArrayList();
 		try {
-			JsonParser parser=new JsonParser();  //创建JSON解析器
-			JsonObject object=(JsonObject) parser.parse(result);  //创建JsonObject对象
+			JsonParser parser=new JsonParser();  //
+			JsonObject object=(JsonObject) parser.parse(result);  //
 			this.codeid = object.get("codeid").getAsString();
 			if(Public.responseIDOK.equals(this.codeid)){
 				JsonArray jsonArr = object.get("message").getAsJsonArray();

@@ -28,8 +28,8 @@ public class ChangePasswordResponse {
      */
 	public ChangePasswordResponse(String result){
 		try {
-			JsonParser parser=new JsonParser();  //创建JSON解析器
-			JsonObject object=(JsonObject) parser.parse(result);  //创建JsonObject对象
+			JsonParser parser=new JsonParser();  //
+			JsonObject object=(JsonObject) parser.parse(result);  //
 			this.codeid = object.get("codeid").getAsString();
 			this.message = object.get("message").getAsString();
 

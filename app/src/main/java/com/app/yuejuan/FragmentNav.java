@@ -16,7 +16,7 @@ public class FragmentNav extends Fragment{
 	}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //注意View对象的重复使用，以便节省资源
+        //
         if(mView == null) {
         	//R.layout.fragment_bottom_nav_1_layout
             mView = inflater.inflate(this.layoutID, container, false);

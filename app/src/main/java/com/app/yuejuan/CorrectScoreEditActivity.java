@@ -782,7 +782,7 @@ public class CorrectScoreEditActivity extends Activity {
     //获取题目id，name,满分，给分点scorepoints 小题信息 //所有可批阅的题目信息
     public void getGetUserTaskQueInfoFromService(){
     	Public pub = (Public)this.getApplication();
-       
+
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("arg0", pub.userid);
         properties.put("arg1", pub.token);
@@ -814,7 +814,7 @@ public class CorrectScoreEditActivity extends Activity {
     //选题数据获取 选题标签
     public void getSelectQuestionListFromService(){
     	Public pub = (Public)this.getApplication();
-        
+
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("arg0", pub.userid);
         properties.put("arg1", pub.token);
@@ -863,8 +863,8 @@ public class CorrectScoreEditActivity extends Activity {
 		Log.v("YJ save result", scoreJson);
 		
     	Public pub = (Public)this.getApplication();
-        
-        
+
+
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("arg0", pub.userid);
         properties.put("arg1", pub.token);
@@ -970,8 +970,8 @@ public class CorrectScoreEditActivity extends Activity {
 		Log.v("YJ save result", scoreJson);
 		
     	Public pub = (Public)this.getApplication();
-        
-        
+
+
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("arg0", pub.userid);
         properties.put("arg1", pub.token);
@@ -1044,7 +1044,7 @@ public class CorrectScoreEditActivity extends Activity {
     	String userid = pub.getUserID();
     	String token = pub.getToken();
     	String subjectid = pub.usersubjectid;
-       
+
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("arg0", userid);
         properties.put("arg1", token);
@@ -1078,7 +1078,7 @@ public class CorrectScoreEditActivity extends Activity {
     	String userid = pub.getUserID();
     	String token = pub.getToken();
     	String subjectid = pub.usersubjectid;
-    	
+
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("arg0", userid);
         properties.put("arg1", token);
@@ -1225,7 +1225,7 @@ public class CorrectScoreEditActivity extends Activity {
     	String token = pub.getToken();
     	String score = markScoreJson.toArbitrateString();
     	Log.v("YJ socre", score);
-    	
+
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("arg0", userid);
         properties.put("arg1", token);

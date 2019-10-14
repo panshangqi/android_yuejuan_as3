@@ -35,7 +35,7 @@ public class Public extends Application {
 	public static String responseID = "0001";
 	public static String responseIDOK = "0001";
 	public String cachePath;
-	public static int isMarkingActivity = 1; //默认显示正评列表
+	public static int isMarkingActivity = 1; //
 	public static Context context = null;
 	public static LayoutInflater inflater = null;
 	
@@ -46,10 +46,10 @@ public class Public extends Application {
 			Public.userid = "1001";
 			Public.token = "Hz4ybVyXi2aBJIUrQjLnrg==";
 			Public.username = "1001";
-			Public.usernowproject = "实验";
+			Public.usernowproject = "";
 			Public.usersubjectid = "100001";
-			Public.usersubject = "高一地理综合";
-			Public.userpower = "评卷老师";
+			Public.usersubject = "";
+			Public.userpower = "";
 		}
 		context = getApplicationContext();
 		inflater = LayoutInflater.from(context);
@@ -123,7 +123,7 @@ public class Public extends Application {
 	        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filepath), "UTF-8"));
 	        String line = "";
 	        while ((line = br.readLine()) != null) {
-	            // 如果 t x t文件里的路径 不包含---字符串       这里是对里面的内容进行一个筛选
+	            //
 	        	break;
 	        }
 	        br.close();

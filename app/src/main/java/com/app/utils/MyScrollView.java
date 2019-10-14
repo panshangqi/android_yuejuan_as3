@@ -22,7 +22,7 @@ public class MyScrollView extends ScrollView {
     }    
 
     /**     
-      * 设置滚动接口     
+      *
       * @param onScrollListener     
       */    
     public void setOnScrollListener(OnScrollListener onScrollListener) {        
@@ -41,8 +41,8 @@ public class MyScrollView extends ScrollView {
 
     public interface OnScrollListener{        
         /**         
-          * 回调方法， 返回MyScrollView滑动的Y方向距离         
-          * @param scrollY            、         
+          *
+          * @param scrollY            锟斤拷         
           */        
         public void onScroll(int scrollY);    
     }

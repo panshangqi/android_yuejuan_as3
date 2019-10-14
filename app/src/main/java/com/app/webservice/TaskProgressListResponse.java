@@ -13,27 +13,27 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 /*
-String queid      //题号
-String quename    //题目名称
-String flag_mode  //评卷模式
-int taskcount     //总任务量
-int totalnum_1    //总体一评数
-int totalnum_2    //总体二评数
-int totalnum_3    //总体三评数
-int totalnum_wc   //总体误差已仲裁数
-int totalnum_yc   //总体异常已仲裁数
-int totalnum_3n   //总体三评未改数
-int totalnum_wcn  //总体误差未仲裁数
-int totalnum_ycn  //总体异常未仲裁数
-int wanchengtotal //总体批阅完成数
-double reat       //完成比例
-String avg        //总体平均分
-int teacount      //个人批阅总数
-int teayccount    //个人提交异常卷总数
-String teaavg     //个人平均分
-int grouptaskcount //小组任务量
-int groupwanchengcount  //小组完成量
-double groupwanchenglv  //小组完成比例
+String queid      //
+String quename    //
+String flag_mode  //
+int taskcount     //
+int totalnum_1    //
+int totalnum_2    //
+int totalnum_3    //
+int totalnum_wc   /
+int totalnum_yc   //
+int totalnum_3n   //
+int totalnum_wcn  //
+int totalnum_ycn  //
+int wanchengtotal //
+double reat       //
+String avg        //
+int teacount      //
+int teayccount    //
+String teaavg     //
+int grouptaskcount //
+int groupwanchengcount  //
+double groupwanchenglv  //
 */
 public class TaskProgressListResponse {
 
@@ -70,8 +70,8 @@ public class TaskProgressListResponse {
 	public TaskProgressListResponse(String result){
 		
 		try {
-			JsonParser parser=new JsonParser();  //创建JSON解析器1
-			JsonObject object=(JsonObject) parser.parse(result);  //创建JsonObject对象
+			JsonParser parser=new JsonParser();  //
+			JsonObject object=(JsonObject) parser.parse(result);  //
 			this.codeid = object.get("codeid").getAsString();
 			dataList = new ArrayList();
 			if(Public.responseID.equals(this.codeid)){

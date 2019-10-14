@@ -13,22 +13,22 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 /*
-queid         题目ID
-quename       题目名称
-fullmark      满分
-smallquenum   小题数目
-scorepoints   给分点
-smallqueinfo  小题信息
+queid
+quename
+fullmark
+smallquenum
+scorepoints
+smallqueinfo
 {
-	smallqueid         小题ID
-	smallquename       小题名称
-	smallfullmark      小题满分
-	smallscorepoints   小题给分点
+	smallqueid
+	smallquename
+	smallfullmark
+	smallscorepoints
 }
 
-接口用GetUsertaskqueinfo    
-当smallqueinfo 为空时  用scorepoints参数   
-当smallqueinfo 不为空时 用smallqueinfo 里面字典的smallscorepoints 这个参数
+GetUsertaskqueinfo
+smallqueinfo scorepoints
+smallqueinfo smallqueinfo smallscorepoints
  */
 public class GetUserTaskQueInfoResponse {
 
@@ -65,8 +65,8 @@ public class GetUserTaskQueInfoResponse {
 	public GetUserTaskQueInfoResponse(String result){
 		dataList = new ArrayList();
 		try {
-			JsonParser parser=new JsonParser();  //创建JSON解析器
-			JsonObject object=(JsonObject) parser.parse(result);  //创建JsonObject对象
+			JsonParser parser=new JsonParser();  //
+			JsonObject object=(JsonObject) parser.parse(result);  //
 			this.codeid = object.get("codeid").getAsString();
 			if(Public.responseIDOK.equals(this.codeid)){
 				JsonArray jsonArr = object.get("message").getAsJsonArray();

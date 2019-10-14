@@ -41,10 +41,13 @@ public class GetUserInfoResponse {
 	public GetUserInfoResponse(String result){
 		
 		try {
-			JsonParser parser=new JsonParser();  //创建JSON解析器
-			JsonObject object=(JsonObject) parser.parse(result);  //创建JsonObject对象
+			Log.v("YJ GetUsaerInfo result = ", result);
+			JsonParser parser=new JsonParser();  //
+
+			JsonObject object=(JsonObject) parser.parse(result);  //
 			this.codeid = object.get("codeid").getAsString();
 			JsonArray jsonArr = object.get("message").getAsJsonArray();
+			Log.v("YJ getuserinfo message length = ", String.valueOf(jsonArr.size()));
 			if(jsonArr.size()>0){
                 
                 JsonObject subObject=jsonArr.get(0).getAsJsonObject();

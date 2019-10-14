@@ -13,13 +13,13 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 /*
- * int secretid            密号
-String firstmark        初评分数
-String secondmark       复评分数
-String flagmode         试卷类型
-String signname         试卷标记
-String submittime       提交时间
-String quename          题目名称
+ * int secretid
+String firstmark
+String secondmark
+String flagmode
+String signname
+String submittime
+String quename
  */
 public class AlreadyMarkListResponse {
 
@@ -50,8 +50,8 @@ public class AlreadyMarkListResponse {
 	public AlreadyMarkListResponse(String result){
 		dataList = new ArrayList();
 		try {
-			JsonParser parser=new JsonParser();  //创建JSON解析器
-			JsonObject object=(JsonObject) parser.parse(result);  //创建JsonObject对象
+			JsonParser parser=new JsonParser();  //
+			JsonObject object=(JsonObject) parser.parse(result);  //
 			this.codeid = object.get("codeid").getAsString();
 			if(Public.responseIDOK.equals(this.codeid)){
 				JsonArray jsonArr = object.get("message").getAsJsonArray();

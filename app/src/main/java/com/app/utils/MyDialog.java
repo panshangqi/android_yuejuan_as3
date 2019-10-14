@@ -12,22 +12,22 @@ import android.widget.Button;
 import android.widget.TextView;
 
 /**
- * ´´½¨×Ô¶¨ÒåµÄDialog£¬Ö÷ÒªÑ§Ï°ÊµÏÖÔ­Àí
+ *
  * Created by admin on 2017/8/30.
  */
 
 public class MyDialog extends Dialog {
-    private Button yes;//È·¶¨°´Å¥
-    private Button no;//È¡Ïû°´Å¥
-    private TextView titleTV;//ÏûÏ¢±êÌâÎÄ±¾
-    private TextView message;//ÏûÏ¢ÌáÊ¾ÎÄ±¾
-    private String titleStr;//´ÓÍâ½çÉèÖÃµÄtitleÎÄ±¾
-    private String messageStr;//´ÓÍâ½çÉèÖÃµÄÏûÏ¢ÎÄ±¾
+    private Button yes;//
+    private Button no;//
+    private TextView titleTV;//
+    private TextView message;//
+    private String titleStr;//
+    private String messageStr;//
     private View splitView;
-    //È·¶¨ÎÄ±¾ºÍÈ¡ÏûÎÄ±¾µÄÏÔÊ¾µÄÄÚÈİ
+    //
     private String yesStr, noStr;
-    private onNoOnclickListener noOnclickListener;//È¡Ïû°´Å¥±»µã»÷ÁËµÄ¼àÌıÆ÷
-    private onYesOnclickListener yesOnclickListener;//È·¶¨°´Å¥±»µã»÷ÁËµÄ¼àÌıÆ÷
+    private onNoOnclickListener noOnclickListener;//
+    private onYesOnclickListener yesOnclickListener;//
     private String DialogType;
     public MyDialog( Context context, int themeResId, String DialogType) {
         super(context, themeResId);
@@ -35,7 +35,7 @@ public class MyDialog extends Dialog {
     }
 
     /**
-     * ÉèÖÃÈ¡Ïû°´Å¥µÄÏÔÊ¾ÄÚÈİºÍ¼àÌı
+     *
      *
      * @param str
      * @param onNoOnclickListener
@@ -48,7 +48,7 @@ public class MyDialog extends Dialog {
     }
 
     /**
-     * ÉèÖÃÈ·¶¨°´Å¥µÄÏÔÊ¾ÄÚÈİºÍ¼àÌı
+     *
      *
      * @param str
      * @param yesOnclickListener
@@ -66,20 +66,20 @@ public class MyDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_yes_no);
-        //¿Õ°×´¦²»ÄÜÈ¡Ïû¶¯»­
+
         setCanceledOnTouchOutside(false);
 
-        //³õÊ¼»¯½çÃæ¿Ø¼ş
+
         initView();
 
-        //³õÊ¼»¯½çÃæÊı¾İ
+
         initData();
-        //³õÊ¼»¯½çÃæ¿Ø¼şµÄÊÂ¼ş
+
         initEvent();
     }
 
     /**
-     * ³õÊ¼»¯½çÃæ¿Ø¼ş
+     *
      */
     private void initView() {
         yes = (Button)findViewById(R.id.yes);
@@ -95,17 +95,17 @@ public class MyDialog extends Dialog {
     }
 
     /**
-     * ³õÊ¼»¯½çÃæ¿Ø¼şµÄÏÔÊ¾Êı¾İ
+     *
      */
     private void initData() {
-        //Èç¹ûÓÃ»§×Ô¶¨ÁËtitleºÍmessage
+        //ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½titleï¿½ï¿½message
         if (titleStr != null) {
             titleTV.setText(titleStr);
         }
         if (messageStr != null) {
             message.setText(messageStr);
         }
-        //Èç¹ûÉèÖÃ°´Å¥ÎÄ×Ö
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½Å¥ï¿½ï¿½ï¿½ï¿½
         if (yesStr != null) {
             yes.setText(yesStr);
         }
@@ -115,10 +115,10 @@ public class MyDialog extends Dialog {
     }
 
     /**
-     * ³õÊ¼»¯½çÃæµÄÈ·¶¨ºÍÈ¡Ïû¼àÌı
+     *
      */
     private void initEvent() {
-        //ÉèÖÃÈ·¶¨°´Å¥±»µã»÷ºó£¬ÏòÍâ½çÌá¹©¼àÌı
+        //
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +127,7 @@ public class MyDialog extends Dialog {
                 }
             }
         });
-        //ÉèÖÃÈ¡Ïû°´Å¥±»µã»÷ºó£¬ÏòÍâ½çÌá¹©¼àÌı
+        //
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,7 +139,7 @@ public class MyDialog extends Dialog {
     }
 
     /**
-     * ´ÓÍâ½çActivityÎªDialogÉèÖÃ±êÌâ
+     *
      *
      * @param title
      */
@@ -148,7 +148,7 @@ public class MyDialog extends Dialog {
     }
 
     /**
-     * ´ÓÍâ½çActivityÎªDialogÉèÖÃmessage
+     *
      *
      * @param message
      */

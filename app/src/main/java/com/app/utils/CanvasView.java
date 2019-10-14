@@ -14,17 +14,17 @@ public class CanvasView extends View{
 	
 	public CanvasView(Context context){
 		super(context);
-		paint = new Paint(); //设置一个笔刷大小是3的黄色的画笔
+		paint = new Paint();
 		paint.setColor(Color.YELLOW);
 		paint.setStrokeJoin(Paint.Join.ROUND);
 		paint.setStrokeCap(Paint.Cap.ROUND);
 		paint.setStrokeWidth(3);
 	}
-	//在这里我们将测试canvas提供的绘制图形方法
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-        canvas.drawColor(Color.parseColor("#F5FFFA"));//画布的背景
+        canvas.drawColor(Color.parseColor("#F5FFFA"));
 		canvas.drawCircle(100, 100, 100, paint);
 		
 	}

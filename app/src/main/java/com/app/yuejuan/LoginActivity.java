@@ -157,6 +157,7 @@ public class LoginActivity extends Activity {
                     	//AppCookies.setToken(reponse.getAuthtoken());
                         Public pub = (Public)LoginActivity.this.getApplication();
                         pub.setToken(reponse.getAuthtoken());
+                        Log.v("YJ token = ", pub.getToken());
                         //pub.setUserName(pub.getUserID());
                         //pub.setHostIP(pub.imageHost);
                         LoginActivity.this.getUserInfo();
@@ -170,11 +171,11 @@ public class LoginActivity extends Activity {
         });
 	}
     public void getUserInfo(){
- 
+
     	Public pub = (Public)this.getApplication();
     	String userid = pub.getUserID();
     	String token = pub.getToken();
-       
+
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("arg0", userid);
         properties.put("arg1", token);
@@ -182,25 +183,27 @@ public class LoginActivity extends Activity {
         WebServiceUtil.callWebService(WebServiceUtil.getURL(), "GetUserinfo", properties, new WebServiceUtil.WebServiceCallBack() {
             @Override
             public void callBack(String result) {
+
                 if (result != null) {
-                    Log.v("YJ",result);
-                    
+                    Log.v("YJ >1",result);
+
                     GetUserInfoResponse reponse = new GetUserInfoResponse(result);
                     if("0001".equals(reponse.getCodeID())){
                     	Public pub = (Public)LoginActivity.this.getApplication();
-                       
+
                     	pub.userid = reponse.userid;
                     	pub.username = reponse.username;
+                        pub.userpower = reponse.userpower;
                     	pub.usernowproject = reponse.usernowproject;
                     	pub.usersubjectid = reponse.usersubjectid;
                     	pub.usersubject = reponse.usersubject;
-                    	pub.userpower = reponse.userpower;
-                        
+
+
                         Intent intent =new Intent(LoginActivity.this, MarkingActivity.class);
                     	startActivity(intent);
                     	//设置切换动画，从右边进入，左边退出
         				overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-        				
+
                     }else if("0002".equals(reponse.getCodeID())){
                     	Toast.makeText(LoginActivity.this, "用户信息验证失败", Toast.LENGTH_SHORT).show();
                     }else if("0003".equals(reponse.getCodeID())){

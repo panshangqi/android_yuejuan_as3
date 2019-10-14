@@ -51,7 +51,7 @@ public class ModifyPasswordActivity extends Activity {
     }
     public void submitNewPassword(String password){
     	Public pub = (Public)this.getApplication();
-        
+
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("arg0", pub.userid);
         properties.put("arg1", pub.token);

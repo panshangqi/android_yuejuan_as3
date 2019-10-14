@@ -27,7 +27,7 @@ public class TotalScoreItemListAdapter extends BaseAdapter{
     List<TotalScoreItemInfo> listInfo;
     String queid;
     ItemClickInterfaceListener itemClickListener;
-    private int selectedPosition = 0;// Ñ¡ÖÐµÄÎ»ÖÃ 
+    private int selectedPosition = 0;//
     public TotalScoreItemListAdapter(Context context,List<TotalScoreItemInfo> listInfo, String queid, ItemClickInterfaceListener itemClickListener){
     	
         inflater = LayoutInflater.from(context);
@@ -78,7 +78,7 @@ public class TotalScoreItemListAdapter extends BaseAdapter{
     		return false;
     	return true;
     }
-    //Ð¡Ìâ·ÖÊý¶ººÅ¸ô¿ª
+    //Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ï¿½
     public String getSubScoreList(){
     	String res = "";
 		for(int i=0;i<this.listInfo.size();i++){

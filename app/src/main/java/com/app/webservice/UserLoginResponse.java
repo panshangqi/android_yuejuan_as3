@@ -27,11 +27,14 @@ public class UserLoginResponse {
      */
 	public UserLoginResponse(String result){
 		try {
-			JsonParser parser=new JsonParser();  //创建JSON解析器
-			JsonObject object=(JsonObject) parser.parse(result);  //创建JsonObject对象
+			JsonParser parser=new JsonParser();  //
+			JsonObject object=(JsonObject) parser.parse(result);  //
 			this.codeid = object.get("codeid").getAsString();
 			this.message = object.get("message").getAsString();
 			this.authtoken = object.get("authtoken").getAsString();
+            Log.v("YJ", "codeid: " + this.codeid);
+            Log.v("YJ", "message: " + this.message);
+            Log.v("YJ", "authtoken: " + this.authtoken);
 		} catch (JsonIOException e) {
             e.printStackTrace();
         } catch (JsonSyntaxException e) {

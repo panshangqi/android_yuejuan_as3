@@ -58,10 +58,10 @@ import android.graphics.PorterDuffXfermode;
 
 import android.util.Base64;
 import android.util.Log;
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
+//import org.ksoap2.SoapEnvelope;
+//import org.ksoap2.serialization.SoapObject;
+//import org.ksoap2.serialization.SoapSerializationEnvelope;
+//import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.google.gson.Gson;

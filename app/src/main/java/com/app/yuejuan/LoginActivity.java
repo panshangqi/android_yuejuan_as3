@@ -25,10 +25,10 @@ import android.content.IntentFilter;
 //import java.lang.Integer;
 //import javax.xml.rpc.ParameterMode;
 import android.util.Log;
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
+//import org.ksoap2.SoapEnvelope;
+//import org.ksoap2.serialization.SoapObject;
+//import org.ksoap2.serialization.SoapSerializationEnvelope;
+//import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.google.gson.Gson;
@@ -65,7 +65,10 @@ public class LoginActivity extends Activity {
         Public pub = (Public)this.getApplication();
         loginButton = (Button)this.findViewById(R.id.login_button);
         usernameET.setText(pub.getUserID());
-        
+
+//        usernameET.setText("1003");
+//        passwordET.setText("888888");
+//        ipET.setText("114.116.116.99:88");
     }
 
 

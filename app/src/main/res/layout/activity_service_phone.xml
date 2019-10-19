@@ -14,6 +14,29 @@
 	    android:orientation="vertical"
 	    
 	    >
+		<TextView
+			android:id="@+id/phone_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="若有问题请咨询下方奥亚客服电话"
+			android:textColor="#333"
+			android:textSize="16dp"
+			android:gravity="left"
+			android:padding="2dp"
+			android:layout_gravity="center"
+			/>
+		<TextView
+			android:id="@+id/phone_number"
+			android:layout_below="@id/phone_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="0312-5887455"
+			android:textColor="#333"
+			android:textSize="16dp"
+			android:gravity="center"
+			android:padding="2dp"
+			android:layout_gravity="center"
+			/>
 
 	</RelativeLayout>
 

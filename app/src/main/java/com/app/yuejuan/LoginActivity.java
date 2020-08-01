@@ -66,9 +66,9 @@ public class LoginActivity extends Activity {
         loginButton = (Button)this.findViewById(R.id.login_button);
         usernameET.setText(pub.getUserID());
 
-//        usernameET.setText("1003");
-//        passwordET.setText("888888");
-//        ipET.setText("114.116.116.99:88");
+        usernameET.setText("yw001");
+        passwordET.setText("888888");
+        ipET.setText("114.116.116.99:88");
     }
 
 
@@ -132,8 +132,8 @@ public class LoginActivity extends Activity {
 		loginButton.setText("正在登录...");
         loginButton.setBackgroundResource(R.drawable.buttonsharp_gray);
 		Log.v("YJ ", "点击登录");
-		Thread thread = new Thread(new myThread());
-		thread.start();
+//		Thread thread = new Thread(new myThread());
+//		thread.start();
 		
         String username = usernameET.getText().toString();
         String password = passwordET.getText().toString();
@@ -149,9 +149,11 @@ public class LoginActivity extends Activity {
         WebServiceUtil.callWebService(WebServiceUtil.getURL(), "UserLogin", properties, new WebServiceUtil.WebServiceCallBack() {
             @Override
             public void callBack(String result) {
+                Log.v("YJ","=========================");
             	loginButton.setText("登 录");
                 loginButton.setBackgroundResource(R.drawable.buttonsharp);
                 isLogining = false;
+
                 if (result != null) {
                     Log.v("YJ",result);
                     isLoginSuccess = true;
@@ -168,7 +170,8 @@ public class LoginActivity extends Activity {
                     }else{
                     	Toast.makeText(LoginActivity.this, reponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                    
+                }else{
+                    Toast.makeText(LoginActivity.this, "访问错误", Toast.LENGTH_SHORT).show();
                 }
             }
         });

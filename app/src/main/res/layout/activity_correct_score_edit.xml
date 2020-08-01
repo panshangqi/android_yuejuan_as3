@@ -257,17 +257,17 @@
 				    <ImageView 
 				        android:id="@+id/iv"
 				        android:layout_width="match_parent"
-				    	android:layout_height="150dp"
+				    	android:layout_height="wrap_content"
 				    	android:gravity="top"
+						android:background="#ddd"
 			        />
 				    <!-- 透明绘图图层 -->
 				    <ImageView 
 				        android:id="@+id/iv_face"
 				        android:layout_alignTop="@id/iv"
 				        android:layout_width="match_parent"
-				    	android:layout_height="150dp"
+				    	android:layout_height="wrap_content"
 				    	android:gravity="top"
-				    	
 			        />
 			    </RelativeLayout>
 		    </com.app.utils.MyScrollView>

@@ -12,6 +12,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View.OnTouchListener;
@@ -163,6 +164,7 @@ class ScalePoint{
 	public int offset_x;
 	public int offset_y;
 	public float rate;
+	float[] f;
 	public ScalePoint(){
 
 	}
@@ -196,6 +198,8 @@ public class CorrectScoreEditActivity extends Activity {
 	//LinearLayout canvas_view;
 	private ImageView imageView;  
 	private ImageView imageViewFace;
+	private Matrix originMatrix = new Matrix();
+	private boolean isOriginMatrix = true;
 	
 	private Bitmap baseBitmap;  
 	private TextView quenameView;
@@ -243,7 +247,7 @@ public class CorrectScoreEditActivity extends Activity {
         //canvas_view = (LinearLayout)this.findViewById(R.id.canvas_view);
         this.imageView = (ImageView) this.findViewById(R.id.iv);
         this.imageViewFace = (ImageView) this.findViewById(R.id.iv_face);
-        
+
         
         this.recordButton = (RadioButton) this.findViewById(R.id.ct_record_button);
         this.scoreButton = (RadioButton) this.findViewById(R.id.ct_score_button);
@@ -342,6 +346,15 @@ public class CorrectScoreEditActivity extends Activity {
         
         this.initView();
     }
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK ) {
+			//do something.
+			return true;
+		} else {
+			return super.dispatchKeyEvent(event);
+		}
+	}
     public void setCanvasButtonsVisible(int index, boolean vis){
     	for(int i=0;i<canvasIds.length;i++){
     		if(i == index){
@@ -1636,23 +1649,16 @@ public class CorrectScoreEditActivity extends Activity {
                 // 取得想要缩放的matrix参数   
                 Matrix matrix = new Matrix();   
                 matrix.postScale(scaleW, scaleW);
+
                 mainBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-				orignCanvasWidth = mainBitmap.getWidth();
-				orignCanvasHeight = mainBitmap.getHeight();
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(imgViewW,imgViewH);
-                imageView.setLayoutParams(params);
-                //imageView.setScaleType(ImageView.ScaleType.FIT_XY);//使图片充满控件大小,very imporment
-				//imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageView.setLayoutParams(new RelativeLayout.LayoutParams(imgViewW,scrollView.getHeight()));
 				imageView.setScaleType(ImageView.ScaleType.MATRIX);
-                
-                imageViewFace.setLayoutParams(params);
-                //imageViewFace.setScaleType(ImageView.ScaleType.FIT_XY);
+				//背景图片绘制到ImageView
+				imageView.setImageBitmap(mainBitmap);
+
+                imageViewFace.setLayoutParams(new RelativeLayout.LayoutParams(imgViewW, scrollView.getHeight()));
 				imageViewFace.setScaleType(ImageView.ScaleType.MATRIX);
-//                mainFaceBitmp=BitmapFactory
-//             		   .decodeResource(getResources(),R.drawable.canvas_pen)
-//             		   .copy(Bitmap.Config.ARGB_8888,true);
-                //mainFaceBitmp = Bitmap.createBitmap(imgViewW, imgViewH, Config.ARGB_8888);
-                //mainFaceBitmp.setHasAlpha(true);
+
                 
                 //如果回评有标注，则把已有标注图层画上去
                 if(markScoreJson.commentimage.length() > 0){
@@ -1692,9 +1698,8 @@ public class CorrectScoreEditActivity extends Activity {
         		
         		// 先将灰色背景画上
         		canvas.drawBitmap(mainFaceBitmp, new Matrix(), paint);
-        		
-        		//背景图片绘制到ImageView
-        		imageView.setImageBitmap(mainBitmap);
+
+
         		//imageView.setBackgroundColor(Color.TRANSPARENT);
 				//imageView.setOnTouchListener(new ImageTouchListener());
 
@@ -1703,7 +1708,13 @@ public class CorrectScoreEditActivity extends Activity {
         		// 设置view监听1
         		imageGif.clearAnimation();
         		imageGif.setVisibility(View.GONE);
-        		scrollView.setOnTouchListener(new CanvasTouchListener(canvas, paint, imageViewFace));
+
+				imageView.setImageMatrix(originMatrix);
+				imageViewFace.setImageMatrix(originMatrix);
+        		//imageView.setOnTouchListener(new ImageTouchListener(canvas, paint, imageViewFace, mainBitmap, mainBitmap.getWidth(), mainBitmap.getHeight()));
+        		//scrollView.setOnTouchListener(new ScrollViewTouchListener());
+				scrollView.setOnTouchListener(new ImageTouchListener(canvas, paint, imageViewFace, mainBitmap, mainBitmap.getWidth(), mainBitmap.getHeight()));
+
             }catch(Exception e){
             	e.printStackTrace();
             }
@@ -1736,104 +1747,238 @@ public class CorrectScoreEditActivity extends Activity {
 		float x = event.getX(0) - event.getX(1);
 		float y = event.getY(0) - event.getY(1);
 		return (float) Math.sqrt(x * x + y * y);//两点间距离公式
+		//return 30f;//Math.min(Math.abs(x), Math.abs(y));
 	}
-    class ImageTouchListener implements OnTouchListener {
-    	int width = mainBitmap.getWidth();
-    	int max_width = width * 3;
-    	int min_width = width;
-    	int mode = 0;
-    	int cur_width = width;
-    	int step = 20;
-		// 第一个按下的手指的点
-		private PointF startPoint = new PointF();
-		// 两个按下的手指的触摸点的中点
-		private PointF midPoint = new PointF();
-		// 初始的两个手指按下的触摸点的距离
-		private float oriDis = 1f;
-		private Matrix matrix = new Matrix();
-    	public ImageTouchListener(){
+//	class ScrollViewTouchListener implements OnTouchListener {
+//		public ScrollViewTouchListener(){
+//
+//		}
+//		@Override
+//		public boolean onTouch(View v, MotionEvent event) {
+//
+//			if(isPenOP){
+//				return true;
+//			}
+//			return false;
+//		}
+//	}
+	class ImageTouchListener implements OnTouchListener {
+		ImageView image;
+		Canvas canvas;
+		Paint paint;
+		Bitmap mainBitmap;
 
+		private PointF startPoint = new PointF();
+		private PointF mid = new PointF();
+		private Matrix matrix = new Matrix();
+		private Matrix savedMatrix = new Matrix();
+
+		float step = 18f;
+
+		int NONE = 0;
+		int DRAG = 1;
+		int ZOOM = 2;
+		private int mode = NONE;
+
+		private float[] x = new float[4];
+		private float[] y = new float[4];
+		int screenWidth, screenHeight;
+
+		float downx, downy;
+		private float preDist = 0f, tempDist = 0f;
+		public ImageTouchListener(Canvas canvas, Paint paint, ImageView image, Bitmap mainBitmap, int screenWidth, int screenHeight){
+			this.canvas = canvas;
+			this.image = image;
+			this.paint = paint;
+			this.mainBitmap = mainBitmap;
+			this.screenWidth = screenWidth;
+			this.screenHeight = screenHeight;
 		}
+		long start_time = System.currentTimeMillis();
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
+			ScalePoint sp = getOffsetXY();
 			switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
 				case MotionEvent.ACTION_DOWN:
-					//单点触控
-					pointMode = 0;
-					startPoint.set(event.getX(), event.getY());
-					break;
-				case MotionEvent.ACTION_POINTER_DOWN:
-					//多点触控
-					oriDis = distance(event);
-					Log.v("YJ scrollTop", "双指操作 dist=" + String.valueOf(oriDis));
-					if (oriDis > 10f) {
-						midPoint = midPoint(event);
-						pointMode = 1;
+
+					if(isPenOP){
+						downx = event.getX();
+						downy = event.getY();
+						//return true;
+						downx = (downx - sp.offset_x)/sp.rate;
+						downy = (downy - sp.offset_y)/sp.rate;
 					}
 					break;
-				case MotionEvent.ACTION_MOVE:
-					// 手指滑动事件
-                    Log.v("YJ scrollTop", "双指操作 mode=" + String.valueOf(pointMode));
-                    if(pointMode == 1){
-
-						// 两个手指滑动
-						float newDist = distance(event);
-						if (newDist > 10f) {
-
-                            float scale = newDist / oriDis;
-							Log.v("YJ scrollTop", String.valueOf(scale));
-                            if(scale > 1.0f){
-								cur_width += step;
-							}else{
-								cur_width -= step;
-							}
-                            //int w = (int)(width * scale);
-                            //if(cur_width<max_width && cur_width>min_width)
-							    setScaleImage(scale, midPoint.x, midPoint.y);
-						}
-                    }
-					break;
 				case MotionEvent.ACTION_UP:
-					pointMode = 0;
+                    if(mode == ZOOM){
+                        mode = NONE;
+                        break;
+                    }
+					Log.v("YJ", "单点操作");
+
+					if(isDuiOP){
+
+						downx = event.getX() - sp.offset_x;
+						downy = event.getY() - sp.offset_y;
+						downx /= sp.rate;
+						downy /= sp.rate;
+						//Log.v("YJ event point x=", String.valueOf(downx) + ", y=" + String.valueOf(downy));
+						isMarkBiaozhu = true;
+						//return true;
+						// 创建画笔
+						Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);//消除锯齿
+						// 画笔颜色为红色
+						paint.setColor(Color.RED);
+						// 宽度5个像素
+						paint.setStrokeWidth(3);
+						this.canvas.drawLine(downx-20, downy, downx, downy + 20, paint);
+						this.canvas.drawLine(downx -1, downy + 19, downx + 40, downy - 20, paint);
+						// 刷新image
+						this.image.invalidate();
+					}
+					else if(isBanduiOP){
+						downx = event.getX();
+						downy = event.getY();
+						downx = (downx - sp.offset_x)/sp.rate;
+						downy = (downy - sp.offset_y)/sp.rate;
+						//return true;
+						isMarkBiaozhu = true;
+						// 创建画笔
+						Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);//消除锯齿
+						// 画笔颜色为红色
+						paint.setColor(Color.RED);
+						// 宽度5个像素
+						paint.setStrokeWidth(3);
+						this.canvas.drawLine(downx-20, downy, downx, downy + 20, paint);
+						this.canvas.drawLine(downx-1, downy + 19, downx + 40, downy - 20, paint);
+						this.canvas.drawLine(downx, downy -12, downx + 35, downy + 20, paint);
+						// 刷新image
+						this.image.invalidate();
+					}
+					else if(isWrongOP){
+						downx = event.getX();
+						downy = event.getY();
+						downx = (downx - sp.offset_x)/sp.rate;
+						downy = (downy - sp.offset_y)/sp.rate;
+						isMarkBiaozhu = true;
+						//return true;
+						// 创建画笔
+						Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);//消除锯齿
+						// 画笔颜色为红色
+						paint.setColor(Color.RED);
+						// 宽度5个像素
+						paint.setStrokeWidth(3);
+						this.canvas.drawLine(downx-20, downy-20, downx+20, downy + 20, paint);
+						this.canvas.drawLine(downx-20, downy + 20, downx + 20, downy - 20, paint);
+						// 刷新image
+						this.image.invalidate();
+					}
+				    break;
+
+				case MotionEvent.ACTION_POINTER_DOWN:
+
+					preDist = distance(event);
+					if(preDist > 15f){
+						savedMatrix.set(matrix);
+						mid = midPoint(event);
+						mode = ZOOM;
+						startPoint.set(event.getX(), event.getY());
+						imageView.setScaleType(ImageView.ScaleType.MATRIX);
+					}
+                    Log.v("YJ", "双指操作");
+				    break;
+
+				case MotionEvent.ACTION_MOVE:
+					if(mode == DRAG){
+						//matrix.set(savedMatrix);
+						//matrix.postTranslate(event.getX() - startPoint.x, event.getY() - startPoint.y);
+					}
+					else if(mode == ZOOM){
+
+						try{
+							float newDist = distance(event);
+							Log.v("YJ matrix rate = ", String.valueOf(sp.rate));
+                            if(newDist > 15f){
+
+                                float rate = newDist / preDist;
+								if((sp.rate >0.6f && sp.rate<3.0f)||(sp.rate > 3.0f && rate < 1.0f )||(sp.rate < 0.6f && rate > 1.0f)){
+									matrix.set(savedMatrix);
+									Log.v("YJ rate = ", ">>>>>>>>>>>>>>>>>>>>");
+									matrix.postScale(rate, rate, mid.x, mid.y);
+									matrix.postTranslate(event.getX() - startPoint.x, event.getY() - startPoint.y);
+									imageView.setImageMatrix(matrix);
+									imageViewFace.setImageMatrix(matrix);
+									break;
+								}
+                            }
+						}catch (Exception e){
+
+						}
+
+					}
+					if(isPenOP && mode != ZOOM){
+						// 路径画板
+
+						isMarkBiaozhu = true;
+						float x = event.getX();
+						float y = event.getY();
+
+						x = (x - sp.offset_x)/sp.rate;
+						y = (y - sp.offset_y)/sp.rate;
+						// 画线
+						Log.v("YJ move", String.valueOf(x) + "," + String.valueOf(y));
+						this.canvas.drawLine(downx, downy, x, y, this.paint);
+						// 刷新image
+						this.image.invalidate();
+						downx = x;
+						downy = y;
+						Log.v("YJ","11");
+					}
+					break;
+
 				case MotionEvent.ACTION_POINTER_UP:
-					// 手指放开事件
-					pointMode = 0;
+					//mode = NONE;
+					break;
+				default:
 					break;
 			}
 
-			return false;
+            setVisibleRecord(false);
+            setVisibleSelect(false);
+			return true;
 		}
-		public void setScaleImage(float img_width, float img_x, float img_y) {
-			// 取得想要缩放的matrix参数
-			/*
-			int width = mainBitmap.getWidth();
-			int height = mainBitmap.getHeight();
-			int imgViewW = img_width;
-			int imgViewH = 300;//imageView.getHeight();
-			float scaleW = imgViewW*1.0f / width;
-			//float scaleH = imgViewH / height;
-			imgViewH = (int)(scaleW * height);
-
-			Matrix matrix = new Matrix();
-			matrix.postScale(scaleW, scaleW);
-			if(null != scaleMainBitMap)
-				scaleMainBitMap.recycle();
-			scaleMainBitMap = Bitmap.createBitmap(mainBitmap, 0, 0, width, height, matrix, true);
-			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(imgViewW,imgViewH);
-			imageView.setLayoutParams(params);
-			imageView.setImageBitmap(scaleMainBitMap);*/
-			float scale = 0.98f;
-			if(img_width > 1){
-				scale = 1.02f;
+		private boolean checkMatrix() {
+			Log.v("YJ x0", String.valueOf(x[0]));
+			if(x[0] < -500)
+			{
+				return false;
 			}
-			Log.v("YJ scale", String.valueOf(scale));
-			matrix.postScale(scale, scale, img_x,img_y);
-
-			imageView.setImageMatrix(matrix);
+			return true;
 		}
+		public ScalePoint getOffsetXY(){
+			//==============================
+			ScalePoint sp = new ScalePoint();
+			float[] f = new float[9];
+			Matrix matrix = imageView.getImageMatrix();
+			matrix.getValues(f);
 
+			sp.offset_x = (int) f[2]; //x方向上的偏移量(单位px)
+			sp.offset_y = (int) f[5]; //offset_y = (int) values[5];
+			sp.rate = f[0];
+
+//			x[0] = f[Matrix.MTRANS_X];
+//			y[0] = f[Matrix.MTRANS_Y];
+//			x[1] = f[Matrix.MSCALE_X] * mainBitmap.getWidth() + f[Matrix.MSKEW_X] * 0 + f[Matrix.MTRANS_X];
+//			y[1] = f[Matrix.MSKEW_Y] * mainBitmap.getWidth() + f[Matrix.MSCALE_Y] * 0 + f[Matrix.MTRANS_Y];
+//			x[2] = f[Matrix.MSCALE_X] * 0 + f[Matrix.MSKEW_X] * mainBitmap.getHeight() + f[Matrix.MTRANS_X];
+//			y[2] = f[Matrix.MSKEW_Y] * 0 + f[Matrix.MSCALE_Y] * mainBitmap.getHeight() + f[Matrix.MTRANS_Y];
+//			x[3] = f[Matrix.MSCALE_X] * mainBitmap.getWidth() + f[Matrix.MSKEW_X] * mainBitmap.getHeight() + f[Matrix.MTRANS_X];
+//			y[3] = f[Matrix.MSKEW_Y] * mainBitmap.getWidth() + f[Matrix.MSCALE_Y] * mainBitmap.getHeight() + f[Matrix.MTRANS_Y];
+//			Log.v("YJ", "width: "+String.valueOf(mainBitmap.getWidth()) +", height: " + String.valueOf(mainBitmap.getHeight()));
+			return sp;
+		}
 	}
-
     //绘图事件监听
     class CanvasTouchListener implements OnTouchListener {
     	float downx, downy, x, y;
@@ -1841,20 +1986,15 @@ public class CorrectScoreEditActivity extends Activity {
     	Canvas canvas;
     	Paint paint;
 
-		int width = mainBitmap.getWidth();
-		int max_width = width * 3;
-		int min_width = width;
-		int mode = 0;
-		int cur_width = width;
-		int step = 20;
-		// 第一个按下的手指的点
-		private PointF startPoint = new PointF();
 		// 两个按下的手指的触摸点的中点
 		private PointF midPoint = new PointF();
 		// 初始的两个手指按下的触摸点的距离
 		private float oriDis = 1f, preDis = 0, curDis = 1f;
-		private Matrix matrix = new Matrix();
-		private int offset_x = 0, offset_y = 0;
+        private Matrix matrix = new Matrix();
+        private Matrix matrix1 = new Matrix();
+        private Matrix saveMatrix = new Matrix();
+
+		private float start_x = 0, start_y = 0;
     	public CanvasTouchListener(Canvas canvas, Paint paint, ImageView image){
     		this.canvas = canvas;
     		this.image = image;
@@ -1870,7 +2010,11 @@ public class CorrectScoreEditActivity extends Activity {
 				case MotionEvent.ACTION_DOWN:
 					//单点触控
 					pointMode = 0;
-					startPoint.set(event.getX(), event.getY());
+                    //saveMatrix.set(matrix);
+                    //startPoint.set(event.getX(), event.getY());
+                    start_x = event.getX();
+                    start_y = event.getY();
+					Log.v("YJ scrollTop", "单指操作 dist=");
 					break;
 				case MotionEvent.ACTION_POINTER_DOWN:
 					//多点触控
@@ -1884,6 +2028,10 @@ public class CorrectScoreEditActivity extends Activity {
 					break;
 				case MotionEvent.ACTION_MOVE:
 					// 手指滑动事件
+                    if(pointMode == 0){
+                        // 设置当前的 matrix
+                        setScaleImageTranslate(event.getX() - start_x, event.getY() - start_y);
+                    }
 					if(pointMode == 1){
 						ScalePoint sp = getOffsetXY();
 						Log.v("YJ ====>", String.valueOf(sp.rate));
@@ -2066,10 +2214,20 @@ public class CorrectScoreEditActivity extends Activity {
 			imageView.setImageMatrix(matrix);
 			imageViewFace.setImageMatrix(matrix);
 		}
+		//平移
+        public void setScaleImageTranslate(float nx, float ny){
+            //imageView.setScaleType(ImageView.ScaleType.MATRIX);
+            imageView.setScaleType(ImageView.ScaleType.MATRIX);
+            imageViewFace.setScaleType(ImageView.ScaleType.MATRIX);
+            ScalePoint sp = getOffsetXY();
+            matrix.postTranslate(nx/sp.rate, ny/sp.rate);
+            imageView.setImageMatrix(matrix);
+            imageViewFace.setImageMatrix(matrix);
+        }
 		public void setScaleImageCenter(){
 			//imageView.setScaleType(ImageView.ScaleType.MATRIX);
 			imageView.setScaleType(ImageView.ScaleType.CENTER);
-			imageViewFace.setScaleType(ImageView.ScaleType.MATRIX);
+			imageViewFace.setScaleType(ImageView.ScaleType.CENTER);
 			matrix.postScale(1.0f, 1.0f);
 
 			imageView.setImageMatrix(matrix);

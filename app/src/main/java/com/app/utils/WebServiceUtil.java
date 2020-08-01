@@ -134,7 +134,7 @@ public class WebServiceUtil {
         HttpURLConnection conn = null;
         String route = methodName;
         Log.v("YJ",route);
-        String HttpResult = null;
+        String HttpResult = "";
         try {
             String xml = "<?xml version=\"1.0\"?>";
             xml += "<soap:Envelope ";
@@ -176,6 +176,8 @@ public class WebServiceUtil {
             conn.setUseCaches(false);
             // 设置传递方式
             conn.setRequestMethod("POST");
+
+            conn.setConnectTimeout(10000);
             // 设置维持长连接
             conn.setRequestProperty("Connection", "keep-alive");
             // 设置文件字符集:
@@ -275,7 +277,7 @@ public class WebServiceUtil {
 
                     String result = (String)msg.obj;
                     Log.v("YJ >>>",result);
-                    if(result == null)
+                    if(result == "")
                         webServiceCallBack.callBack(null);
                     else{
                         webServiceCallBack.callBack(result);

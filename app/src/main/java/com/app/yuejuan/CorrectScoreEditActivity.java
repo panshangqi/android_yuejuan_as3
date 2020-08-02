@@ -274,8 +274,8 @@ public class CorrectScoreEditActivity extends Activity {
         rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);  
         LinearInterpolator lin = new LinearInterpolator();  //setInterpolator表示设置旋转速率。LinearInterpolator为匀速效果，
         rotate.setInterpolator(lin);
-        
-        
+
+		originMatrix.postScale(2.0f, 2.0f);
         canvasOpBtns = new ArrayList();
         for(int i=0;i<canvasIds.length;i++){
         	canvasOpBtns.add((ImageView)this.findViewById(canvasIds[i]));
@@ -1026,7 +1026,12 @@ public class CorrectScoreEditActivity extends Activity {
                     		Log.v("YJ","没有小题，继续加载下一个任务");
                     	}
                 		//加载对应的图片
-                    	CorrectScoreEditActivity.this.getExamTaskListFromService();
+                    	//CorrectScoreEditActivity.this.getExamTaskListFromService();
+						Intent intent =new Intent(CorrectScoreEditActivity.this, CorrectScoreEditActivity.class);
+						intent.putExtra("queid", selectedQueID);
+						intent.putExtra("quename", selectedQueName);
+						intent.putExtra("type", "0"); //正平
+						startActivity(intent);
 
                     }else if("0002".equals(reponse.getCodeID())){
                     	//Toast.makeText(AlreadyMarkActivity.this, reponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -1639,17 +1644,19 @@ public class CorrectScoreEditActivity extends Activity {
                 int height = bitmap.getHeight();  
                 int imgViewW = imageView.getWidth();
                 int imgViewH = 300;//imageView.getHeight();
-                float scaleW = imgViewW*1.0f / width;
-                //float scaleH = imgViewH / height;
-                imgViewH = (int)(scaleW * height);
-                Log.v("YJ scale",String.valueOf(scaleW) + "," + String.valueOf(scaleW));
-                Log.v("YJ",String.valueOf(width) + "," + String.valueOf(height));
-                Log.v("YJ",String.valueOf(imgViewW) + "," + String.valueOf(imgViewH));
-
+//                float scaleW = imgViewW*1.0f / width;
+//                //float scaleH = imgViewH / height;
+//                imgViewH = (int)(scaleW * height);
+//                Log.v("YJ scale",String.valueOf(scaleW) + "," + String.valueOf(scaleW));
+//                Log.v("YJ",String.valueOf(width) + "," + String.valueOf(height));
+//                Log.v("YJ",String.valueOf(imgViewW) + "," + String.valueOf(imgViewH));
+				//为了防止图片过大，进行bitmap压缩，然后通过matrix充满ImageView
+				int show_bitmap_width = imgViewW / 2;
+				float scaleW = show_bitmap_width*1.0f / width;
+				int show_bitmap_height = (int)(height*scaleW);
                 // 取得想要缩放的matrix参数   
                 Matrix matrix = new Matrix();   
                 matrix.postScale(scaleW, scaleW);
-
                 mainBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
                 imageView.setLayoutParams(new RelativeLayout.LayoutParams(imgViewW,scrollView.getHeight()));
 				imageView.setScaleType(ImageView.ScaleType.MATRIX);
@@ -1666,15 +1673,14 @@ public class CorrectScoreEditActivity extends Activity {
                 	Bitmap tempBitmap = base64ToBitmap(markScoreJson.commentimage);
                 	
                 	Matrix _matrix = new Matrix();   
-                	float _scaleW = imgViewW*1.0f / tempBitmap.getWidth();
+                	float _scaleW = show_bitmap_width*1.0f / tempBitmap.getWidth();
                 	Log.v("YJ _scale",String.valueOf(_scaleW) + "," + String.valueOf(_scaleW));
                 	
                 	if(Math.abs(_scaleW - 1.0f) < 0.01f){
-                		_scaleW = 0.99f;
+                		_scaleW = 0.999f;
                 	}
                 	_matrix.postScale(_scaleW, _scaleW);
             		mainFaceBitmp = Bitmap.createBitmap(tempBitmap, 0, 0, tempBitmap.getWidth(), tempBitmap.getHeight(), _matrix, true);
-                	
                 	
             		isMarkBiaozhu = true;
                 	Log.v("YJ manFaceWidth w h = ", String.valueOf(mainFaceBitmp.getWidth()) + "," + String.valueOf(mainFaceBitmp.getHeight()));
@@ -1682,9 +1688,14 @@ public class CorrectScoreEditActivity extends Activity {
                 	//没有标注,重新创建画布
                 	Log.v("YJ","没有标注,重新创建画布");
                 	isMarkBiaozhu = false;
-                	mainFaceBitmp = Bitmap.createBitmap(imgViewW, imgViewH, Config.ARGB_8888);
+					Log.v("YJ",String.valueOf(show_bitmap_width) + "," + String.valueOf(show_bitmap_height));
+					try{
+						mainFaceBitmp = Bitmap.createBitmap(show_bitmap_width, show_bitmap_height, Config.ARGB_8888);
+					}catch (Exception e){
+						e.printStackTrace();
+					}
+
                 }
-                
         		// 创建一张画布
         		Canvas canvas = new Canvas(mainFaceBitmp);
         		mainCanvas = canvas;
@@ -1695,10 +1706,8 @@ public class CorrectScoreEditActivity extends Activity {
         		paint.setColor(Color.RED);
         		// 宽度5个像素
         		paint.setStrokeWidth(3);
-        		
         		// 先将灰色背景画上
         		canvas.drawBitmap(mainFaceBitmp, new Matrix(), paint);
-
 
         		//imageView.setBackgroundColor(Color.TRANSPARENT);
 				//imageView.setOnTouchListener(new ImageTouchListener());
@@ -1714,7 +1723,7 @@ public class CorrectScoreEditActivity extends Activity {
         		//imageView.setOnTouchListener(new ImageTouchListener(canvas, paint, imageViewFace, mainBitmap, mainBitmap.getWidth(), mainBitmap.getHeight()));
         		//scrollView.setOnTouchListener(new ScrollViewTouchListener());
 				scrollView.setOnTouchListener(new ImageTouchListener(canvas, paint, imageViewFace, mainBitmap, mainBitmap.getWidth(), mainBitmap.getHeight()));
-
+				Log.v("YJ","画布创建完毕");
             }catch(Exception e){
             	e.printStackTrace();
             }
@@ -1793,6 +1802,7 @@ public class CorrectScoreEditActivity extends Activity {
 			this.mainBitmap = mainBitmap;
 			this.screenWidth = screenWidth;
 			this.screenHeight = screenHeight;
+			matrix.postScale(2.0f, 2.0f);
 		}
 		long start_time = System.currentTimeMillis();
 		@Override
@@ -1902,7 +1912,7 @@ public class CorrectScoreEditActivity extends Activity {
                             if(newDist > 15f){
 
                                 float rate = newDist / preDist;
-								if((sp.rate >0.6f && sp.rate<3.0f)||(sp.rate > 3.0f && rate < 1.0f )||(sp.rate < 0.6f && rate > 1.0f)){
+								if((sp.rate >1.5f && sp.rate<6.0f)||(sp.rate > 6.0f && rate < 1.0f )||(sp.rate < 1.5f && rate > 1.0f)){
 									matrix.set(savedMatrix);
 									Log.v("YJ rate = ", ">>>>>>>>>>>>>>>>>>>>");
 									matrix.postScale(rate, rate, mid.x, mid.y);

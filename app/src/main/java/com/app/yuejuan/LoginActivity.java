@@ -66,9 +66,9 @@ public class LoginActivity extends Activity {
         loginButton = (Button)this.findViewById(R.id.login_button);
         usernameET.setText(pub.getUserID());
 
-        usernameET.setText("yw001");
-        passwordET.setText("888888");
-        ipET.setText("114.116.116.99:88");
+//        usernameET.setText("yw02");
+//        passwordET.setText("888888");
+//        ipET.setText("27.128.200.195:8098");
     }
 
 

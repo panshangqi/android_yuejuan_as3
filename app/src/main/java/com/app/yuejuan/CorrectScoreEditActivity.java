@@ -205,7 +205,7 @@ public class CorrectScoreEditActivity extends Activity {
 	private TextView quenameView;
 	private Canvas canvas;  
 	private Paint paint; 
-	public MyScrollView scrollView;
+	public RelativeLayout scrollView;
 	public String imageUrl;
 	public String selectedQueID;
 	public String selectedQueName = "";
@@ -242,7 +242,7 @@ public class CorrectScoreEditActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_correct_score_edit);
         score_panel_back_button = (LinearLayout)this.findViewById(R.id.score_panel_back_button);
-        scrollView = (MyScrollView)this.findViewById(R.id.canvas_scroll_bar);
+        scrollView = (RelativeLayout) this.findViewById(R.id.canvas_scroll_bar);
         quenameView = (TextView)this.findViewById(R.id.hd_que_name);
         //canvas_view = (LinearLayout)this.findViewById(R.id.canvas_view);
         this.imageView = (ImageView) this.findViewById(R.id.iv);
@@ -304,15 +304,15 @@ public class CorrectScoreEditActivity extends Activity {
 			}
         });
     	
-        this.scrollView.setOnScrollListener(new MyScrollView.OnScrollListener() {
-			
-			@Override
-			public void onScroll(int scrollY) {
-				// TODO Auto-generated method stub
-				Log.v("YJ", "Y = " + String.valueOf(scrollY));
-				scrollTop = scrollY;
-			}
-		});
+//        this.scrollView.setOnScrollListener(new MyScrollView.OnScrollListener() {
+//
+//			@Override
+//			public void onScroll(int scrollY) {
+//				// TODO Auto-generated method stub
+//				Log.v("YJ", "Y = " + String.valueOf(scrollY));
+//				scrollTop = scrollY;
+//			}
+//		});
         //get params queid
         try{
         	Intent intent = getIntent();
@@ -1819,6 +1819,7 @@ public class CorrectScoreEditActivity extends Activity {
 						downx = (downx - sp.offset_x)/sp.rate;
 						downy = (downy - sp.offset_y)/sp.rate;
 					}
+					Log.v("YJ", "单点ACTION_DOWN操作");
 					break;
 				case MotionEvent.ACTION_UP:
                     if(mode == ZOOM){
@@ -1923,7 +1924,7 @@ public class CorrectScoreEditActivity extends Activity {
 								}
                             }
 						}catch (Exception e){
-
+							e.printStackTrace();
 						}
 
 					}
@@ -1989,277 +1990,277 @@ public class CorrectScoreEditActivity extends Activity {
 			return sp;
 		}
 	}
-    //绘图事件监听
-    class CanvasTouchListener implements OnTouchListener {
-    	float downx, downy, x, y;
-    	ImageView image;
-    	Canvas canvas;
-    	Paint paint;
-
-		// 两个按下的手指的触摸点的中点
-		private PointF midPoint = new PointF();
-		// 初始的两个手指按下的触摸点的距离
-		private float oriDis = 1f, preDis = 0, curDis = 1f;
-        private Matrix matrix = new Matrix();
-        private Matrix matrix1 = new Matrix();
-        private Matrix saveMatrix = new Matrix();
-
-		private float start_x = 0, start_y = 0;
-    	public CanvasTouchListener(Canvas canvas, Paint paint, ImageView image){
-    		this.canvas = canvas;
-    		this.image = image;
-    		this.paint = paint;
-    	}
-    	@Override
-    	public boolean onTouch(View v, MotionEvent event) {
-    		int action = event.getAction();
-//    		if(!isPenOP){ //
-//    			return true;
+//    //绘图事件监听
+//    class CanvasTouchListener implements OnTouchListener {
+//    	float downx, downy, x, y;
+//    	ImageView image;
+//    	Canvas canvas;
+//    	Paint paint;
+//
+//		// 两个按下的手指的触摸点的中点
+//		private PointF midPoint = new PointF();
+//		// 初始的两个手指按下的触摸点的距离
+//		private float oriDis = 1f, preDis = 0, curDis = 1f;
+//        private Matrix matrix = new Matrix();
+//        private Matrix matrix1 = new Matrix();
+//        private Matrix saveMatrix = new Matrix();
+//
+//		private float start_x = 0, start_y = 0;
+//    	public CanvasTouchListener(Canvas canvas, Paint paint, ImageView image){
+//    		this.canvas = canvas;
+//    		this.image = image;
+//    		this.paint = paint;
+//    	}
+//    	@Override
+//    	public boolean onTouch(View v, MotionEvent event) {
+//    		int action = event.getAction();
+////    		if(!isPenOP){ //
+////    			return true;
+////    		}
+//			switch (event.getAction() & MotionEvent.ACTION_MASK) {
+//				case MotionEvent.ACTION_DOWN:
+//					//单点触控
+//					pointMode = 0;
+//                    //saveMatrix.set(matrix);
+//                    //startPoint.set(event.getX(), event.getY());
+//                    start_x = event.getX();
+//                    start_y = event.getY();
+//					Log.v("YJ scrollTop", "单指操作 dist=");
+//					break;
+//				case MotionEvent.ACTION_POINTER_DOWN:
+//					//多点触控
+//					oriDis = distance(event);
+//					Log.v("YJ scrollTop", "双指操作 dist=" + String.valueOf(oriDis));
+//					preDis = oriDis;
+//					if (oriDis > 15f) {
+//						midPoint = midPoint(event);
+//						pointMode = 1;
+//					}
+//					break;
+//				case MotionEvent.ACTION_MOVE:
+//					// 手指滑动事件
+//                    if(pointMode == 0){
+//                        // 设置当前的 matrix
+//                        setScaleImageTranslate(event.getX() - start_x, event.getY() - start_y);
+//                    }
+//					if(pointMode == 1){
+//						ScalePoint sp = getOffsetXY();
+//						Log.v("YJ ====>", String.valueOf(sp.rate));
+//
+//						// 两个手指滑动
+//						float newDist = distance(event);
+//						curDis = newDist;
+//						Log.v("YJ scrollTop", "双指操作 newDist = " + String.valueOf(newDist) +
+//								", oriDis = " + String.valueOf(oriDis)
+//						);
+//						midPoint = midPoint(event);
+//						if (newDist / oriDis > 1.0f) { //放大
+//							if(sp.rate > 4.0f)
+//								return true;
+//							preDis = curDis;
+//							setScaleImage(1, midPoint.x, midPoint.y);
+//						}else{ //缩小
+//							if(sp.rate < 1.001f)
+//							{
+//								setScaleImageCenter();
+//								return true;
+//							}
+//							preDis = curDis;
+//							setScaleImage(-1, midPoint.x, midPoint.y);
+//						}
+//					}
+//					break;
+//				case MotionEvent.ACTION_UP:
+//					pointMode = 0;
+//				case MotionEvent.ACTION_POINTER_UP:
+//					// 手指放开事件
+//					pointMode = 0;
+//					break;
+//			}
+//			if(pointMode == 1){
+//				Log.v("YJ scrollTop", "stop");
+//				return true;
+//			}
+//			ScalePoint sp = getOffsetXY();
+//    		if(isDuiOP){
+//
+//    			switch (action) {
+//        		// 按下
+//        		case MotionEvent.ACTION_DOWN:
+//        			Log.v("YJ scrollTop", String.valueOf(scrollTop));
+//
+//        			downx = event.getX() - sp.offset_x;
+//        			downy = event.getY() +scrollTop - sp.offset_y;
+//        			downx /= sp.rate;
+//        			downy /= sp.rate;
+//					Log.v("YJ event point x=", String.valueOf(downx) + ", y=" + String.valueOf(downy));
+//        			isMarkBiaozhu = true;
+//        			//return true;
+//        			// 创建画笔
+//            		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);//消除锯齿
+//            		// 画笔颜色为红色
+//            		paint.setColor(Color.RED);
+//            		// 宽度5个像素
+//            		paint.setStrokeWidth(3);
+//            		this.canvas.drawLine(downx-20, downy, downx, downy + 20, paint);
+//            		this.canvas.drawLine(downx -1, downy + 19, downx + 40, downy - 20, paint);
+//        			// 刷新image
+//        			this.image.invalidate();
+//
+//
+//        			break;
+//        		default:
+//        			break;
+//        		}
 //    		}
-			switch (event.getAction() & MotionEvent.ACTION_MASK) {
-				case MotionEvent.ACTION_DOWN:
-					//单点触控
-					pointMode = 0;
-                    //saveMatrix.set(matrix);
-                    //startPoint.set(event.getX(), event.getY());
-                    start_x = event.getX();
-                    start_y = event.getY();
-					Log.v("YJ scrollTop", "单指操作 dist=");
-					break;
-				case MotionEvent.ACTION_POINTER_DOWN:
-					//多点触控
-					oriDis = distance(event);
-					Log.v("YJ scrollTop", "双指操作 dist=" + String.valueOf(oriDis));
-					preDis = oriDis;
-					if (oriDis > 15f) {
-						midPoint = midPoint(event);
-						pointMode = 1;
-					}
-					break;
-				case MotionEvent.ACTION_MOVE:
-					// 手指滑动事件
-                    if(pointMode == 0){
-                        // 设置当前的 matrix
-                        setScaleImageTranslate(event.getX() - start_x, event.getY() - start_y);
-                    }
-					if(pointMode == 1){
-						ScalePoint sp = getOffsetXY();
-						Log.v("YJ ====>", String.valueOf(sp.rate));
-
-						// 两个手指滑动
-						float newDist = distance(event);
-						curDis = newDist;
-						Log.v("YJ scrollTop", "双指操作 newDist = " + String.valueOf(newDist) +
-								", oriDis = " + String.valueOf(oriDis)
-						);
-						midPoint = midPoint(event);
-						if (newDist / oriDis > 1.0f) { //放大
-							if(sp.rate > 4.0f)
-								return true;
-							preDis = curDis;
-							setScaleImage(1, midPoint.x, midPoint.y);
-						}else{ //缩小
-							if(sp.rate < 1.001f)
-							{
-								setScaleImageCenter();
-								return true;
-							}
-							preDis = curDis;
-							setScaleImage(-1, midPoint.x, midPoint.y);
-						}
-					}
-					break;
-				case MotionEvent.ACTION_UP:
-					pointMode = 0;
-				case MotionEvent.ACTION_POINTER_UP:
-					// 手指放开事件
-					pointMode = 0;
-					break;
-			}
-			if(pointMode == 1){
-				Log.v("YJ scrollTop", "stop");
-				return true;
-			}
-			ScalePoint sp = getOffsetXY();
-    		if(isDuiOP){
-    			
-    			switch (action) {
-        		// 按下
-        		case MotionEvent.ACTION_DOWN:
-        			Log.v("YJ scrollTop", String.valueOf(scrollTop));
-
-        			downx = event.getX() - sp.offset_x;
-        			downy = event.getY() +scrollTop - sp.offset_y;
-        			downx /= sp.rate;
-        			downy /= sp.rate;
-					Log.v("YJ event point x=", String.valueOf(downx) + ", y=" + String.valueOf(downy));
-        			isMarkBiaozhu = true;
-        			//return true;
-        			// 创建画笔
-            		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);//消除锯齿
-            		// 画笔颜色为红色
-            		paint.setColor(Color.RED);
-            		// 宽度5个像素
-            		paint.setStrokeWidth(3);
-            		this.canvas.drawLine(downx-20, downy, downx, downy + 20, paint);
-            		this.canvas.drawLine(downx -1, downy + 19, downx + 40, downy - 20, paint);
-        			// 刷新image
-        			this.image.invalidate();
-
-
-        			break;
-        		default:
-        			break;
-        		}
-    		}
-    		if(isBanduiOP){
-    			
-    			switch (action) {
-        		// 按下
-        		case MotionEvent.ACTION_DOWN:
-
-        			downx = event.getX();
-        			downy = event.getY() +scrollTop;
-					downx = (downx - sp.offset_x)/sp.rate;
-					downy = (downy - sp.offset_y)/sp.rate;
-        			//return true;
-        			isMarkBiaozhu = true;
-        			// 创建画笔
-            		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);//消除锯齿
-            		// 画笔颜色为红色
-            		paint.setColor(Color.RED);
-            		// 宽度5个像素
-            		paint.setStrokeWidth(3);
-            		this.canvas.drawLine(downx-20, downy, downx, downy + 20, paint);
-            		this.canvas.drawLine(downx-1, downy + 19, downx + 40, downy - 20, paint);
-            		this.canvas.drawLine(downx, downy -12, downx + 35, downy + 20, paint);
-        			// 刷新image
-        			this.image.invalidate();
-        			break;
-        		default:
-        			break;
-        		}
-    		}
-    		if(isWrongOP){
-    			switch (action) {
-        		// 按下
-        		case MotionEvent.ACTION_DOWN:
-
-        			downx = event.getX();
-        			downy = event.getY() +scrollTop;
-					downx = (downx - sp.offset_x)/sp.rate;
-					downy = (downy - sp.offset_y)/sp.rate;
-        			isMarkBiaozhu = true;
-        			//return true;
-        			// 创建画笔
-            		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);//消除锯齿
-            		// 画笔颜色为红色
-            		paint.setColor(Color.RED);
-            		// 宽度5个像素
-            		paint.setStrokeWidth(3);
-            		this.canvas.drawLine(downx-20, downy-20, downx+20, downy + 20, paint);
-            		this.canvas.drawLine(downx-20, downy + 20, downx + 20, downy - 20, paint);
-        			// 刷新image
-        			this.image.invalidate();
-        			break;
-        		default:
-        			break;
-        		}
-    		}
-    	
-    		if(isPenOP){
-    			switch (action) {
-        		// 按下
-        		case MotionEvent.ACTION_DOWN:
-        			downx = event.getX();
-        			downy = event.getY() +scrollTop;
-        			//return true;
-
-					downx = (downx - sp.offset_x)/sp.rate;
-					downy = (downy - sp.offset_y)/sp.rate;
-        			break;
-        		// 移动
-        		case MotionEvent.ACTION_MOVE:
-        			// 路径画板
-        			isMarkBiaozhu = true;
-        			x = event.getX();
-        			y = event.getY()+scrollTop;
-
-					x = (x - sp.offset_x)/sp.rate;
-					y = (y - sp.offset_y)/sp.rate;
-        			// 画线
-        			Log.v("YJ move", String.valueOf(x) + "," + String.valueOf(y));
-        			this.canvas.drawLine(downx, downy, x, y, this.paint);
-        			// 刷新image
-        			this.image.invalidate();
-        			downx = x;
-        			downy = y;
-        			Log.v("YJ","11");
-        			//return false;
-        			break;
-        		case MotionEvent.ACTION_UP:
-        			break;
-
-        		default:
-        			break;
-        		}
-    		}
-    		setVisibleRecord(false);
-    		setVisibleSelect(false);
-    		// true：告诉系统，这个触摸事件由我来处理
-    		// false：告诉系统，这个触摸事件我不处理，这时系统会把触摸事件传递给imageview的父节点
-    		return isPenOP ? true : false; //false 禁止滚动， true滚动
-    	}
-		public void setScaleImage(float type, float img_x, float img_y) {
-			// 取得想要缩放的matrix参数
-			float scale = 0.98f;
-			if(type > 0){
-				scale = 1.02f;
-			}
-			Log.v("YJ scale", String.valueOf(type));
-            imageView.setScaleType(ImageView.ScaleType.MATRIX);
-            imageViewFace.setScaleType(ImageView.ScaleType.MATRIX);
-			matrix.postScale(scale, scale, img_x, img_y);
-
-			imageView.setImageMatrix(matrix);
-			imageViewFace.setImageMatrix(matrix);
-		}
-		//平移
-        public void setScaleImageTranslate(float nx, float ny){
-            //imageView.setScaleType(ImageView.ScaleType.MATRIX);
-            imageView.setScaleType(ImageView.ScaleType.MATRIX);
-            imageViewFace.setScaleType(ImageView.ScaleType.MATRIX);
-            ScalePoint sp = getOffsetXY();
-            matrix.postTranslate(nx/sp.rate, ny/sp.rate);
-            imageView.setImageMatrix(matrix);
-            imageViewFace.setImageMatrix(matrix);
-        }
-		public void setScaleImageCenter(){
-			//imageView.setScaleType(ImageView.ScaleType.MATRIX);
-			imageView.setScaleType(ImageView.ScaleType.CENTER);
-			imageViewFace.setScaleType(ImageView.ScaleType.CENTER);
-			matrix.postScale(1.0f, 1.0f);
-
-			imageView.setImageMatrix(matrix);
-			imageViewFace.setImageMatrix(matrix);
-		}
-		public ScalePoint getOffsetXY(){
-            //==============================
-			ScalePoint sp = new ScalePoint();
-            float[] values = new float[9];
-            Matrix matrix = imageView.getImageMatrix();
-            matrix.getValues(values);
-
-			sp.offset_x = (int) values[2]; //x方向上的偏移量(单位px)
-			sp.offset_y = (int) values[5]; //offset_y = (int) values[5];
-			sp.rate = values[0];
-			String debug = String.valueOf(values[0]) + "," + String.valueOf(values[1]) + ",";
-			debug += String.valueOf(values[2]) + "," + String.valueOf(values[3]) + ",";
-			debug += String.valueOf(values[4]) + "," + String.valueOf(values[5]) + ",";
-			debug += String.valueOf(values[6]) + "," + String.valueOf(values[7]) + ",";
-			debug += String.valueOf(values[8]);
-			Log.v("YJ >>", debug);
-            return sp;
-        }
-    }
+//    		if(isBanduiOP){
+//
+//    			switch (action) {
+//        		// 按下
+//        		case MotionEvent.ACTION_DOWN:
+//
+//        			downx = event.getX();
+//        			downy = event.getY() +scrollTop;
+//					downx = (downx - sp.offset_x)/sp.rate;
+//					downy = (downy - sp.offset_y)/sp.rate;
+//        			//return true;
+//        			isMarkBiaozhu = true;
+//        			// 创建画笔
+//            		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);//消除锯齿
+//            		// 画笔颜色为红色
+//            		paint.setColor(Color.RED);
+//            		// 宽度5个像素
+//            		paint.setStrokeWidth(3);
+//            		this.canvas.drawLine(downx-20, downy, downx, downy + 20, paint);
+//            		this.canvas.drawLine(downx-1, downy + 19, downx + 40, downy - 20, paint);
+//            		this.canvas.drawLine(downx, downy -12, downx + 35, downy + 20, paint);
+//        			// 刷新image
+//        			this.image.invalidate();
+//        			break;
+//        		default:
+//        			break;
+//        		}
+//    		}
+//    		if(isWrongOP){
+//    			switch (action) {
+//        		// 按下
+//        		case MotionEvent.ACTION_DOWN:
+//
+//        			downx = event.getX();
+//        			downy = event.getY() +scrollTop;
+//					downx = (downx - sp.offset_x)/sp.rate;
+//					downy = (downy - sp.offset_y)/sp.rate;
+//        			isMarkBiaozhu = true;
+//        			//return true;
+//        			// 创建画笔
+//            		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);//消除锯齿
+//            		// 画笔颜色为红色
+//            		paint.setColor(Color.RED);
+//            		// 宽度5个像素
+//            		paint.setStrokeWidth(3);
+//            		this.canvas.drawLine(downx-20, downy-20, downx+20, downy + 20, paint);
+//            		this.canvas.drawLine(downx-20, downy + 20, downx + 20, downy - 20, paint);
+//        			// 刷新image
+//        			this.image.invalidate();
+//        			break;
+//        		default:
+//        			break;
+//        		}
+//    		}
+//
+//    		if(isPenOP){
+//    			switch (action) {
+//        		// 按下
+//        		case MotionEvent.ACTION_DOWN:
+//        			downx = event.getX();
+//        			downy = event.getY() +scrollTop;
+//        			//return true;
+//
+//					downx = (downx - sp.offset_x)/sp.rate;
+//					downy = (downy - sp.offset_y)/sp.rate;
+//        			break;
+//        		// 移动
+//        		case MotionEvent.ACTION_MOVE:
+//        			// 路径画板
+//        			isMarkBiaozhu = true;
+//        			x = event.getX();
+//        			y = event.getY()+scrollTop;
+//
+//					x = (x - sp.offset_x)/sp.rate;
+//					y = (y - sp.offset_y)/sp.rate;
+//        			// 画线
+//        			Log.v("YJ move", String.valueOf(x) + "," + String.valueOf(y));
+//        			this.canvas.drawLine(downx, downy, x, y, this.paint);
+//        			// 刷新image
+//        			this.image.invalidate();
+//        			downx = x;
+//        			downy = y;
+//        			Log.v("YJ","11");
+//        			//return false;
+//        			break;
+//        		case MotionEvent.ACTION_UP:
+//        			break;
+//
+//        		default:
+//        			break;
+//        		}
+//    		}
+//    		setVisibleRecord(false);
+//    		setVisibleSelect(false);
+//    		// true：告诉系统，这个触摸事件由我来处理
+//    		// false：告诉系统，这个触摸事件我不处理，这时系统会把触摸事件传递给imageview的父节点
+//    		return isPenOP ? true : false; //false 禁止滚动， true滚动
+//    	}
+//		public void setScaleImage(float type, float img_x, float img_y) {
+//			// 取得想要缩放的matrix参数
+//			float scale = 0.98f;
+//			if(type > 0){
+//				scale = 1.02f;
+//			}
+//			Log.v("YJ scale", String.valueOf(type));
+//            imageView.setScaleType(ImageView.ScaleType.MATRIX);
+//            imageViewFace.setScaleType(ImageView.ScaleType.MATRIX);
+//			matrix.postScale(scale, scale, img_x, img_y);
+//
+//			imageView.setImageMatrix(matrix);
+//			imageViewFace.setImageMatrix(matrix);
+//		}
+//		//平移
+//        public void setScaleImageTranslate(float nx, float ny){
+//            //imageView.setScaleType(ImageView.ScaleType.MATRIX);
+//            imageView.setScaleType(ImageView.ScaleType.MATRIX);
+//            imageViewFace.setScaleType(ImageView.ScaleType.MATRIX);
+//            ScalePoint sp = getOffsetXY();
+//            matrix.postTranslate(nx/sp.rate, ny/sp.rate);
+//            imageView.setImageMatrix(matrix);
+//            imageViewFace.setImageMatrix(matrix);
+//        }
+//		public void setScaleImageCenter(){
+//			//imageView.setScaleType(ImageView.ScaleType.MATRIX);
+//			imageView.setScaleType(ImageView.ScaleType.CENTER);
+//			imageViewFace.setScaleType(ImageView.ScaleType.CENTER);
+//			matrix.postScale(1.0f, 1.0f);
+//
+//			imageView.setImageMatrix(matrix);
+//			imageViewFace.setImageMatrix(matrix);
+//		}
+//		public ScalePoint getOffsetXY(){
+//            //==============================
+//			ScalePoint sp = new ScalePoint();
+//            float[] values = new float[9];
+//            Matrix matrix = imageView.getImageMatrix();
+//            matrix.getValues(values);
+//
+//			sp.offset_x = (int) values[2]; //x方向上的偏移量(单位px)
+//			sp.offset_y = (int) values[5]; //offset_y = (int) values[5];
+//			sp.rate = values[0];
+//			String debug = String.valueOf(values[0]) + "," + String.valueOf(values[1]) + ",";
+//			debug += String.valueOf(values[2]) + "," + String.valueOf(values[3]) + ",";
+//			debug += String.valueOf(values[4]) + "," + String.valueOf(values[5]) + ",";
+//			debug += String.valueOf(values[6]) + "," + String.valueOf(values[7]) + ",";
+//			debug += String.valueOf(values[8]);
+//			Log.v("YJ >>", debug);
+//            return sp;
+//        }
+//    }
 }

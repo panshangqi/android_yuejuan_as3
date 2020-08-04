@@ -1805,6 +1805,9 @@ public class CorrectScoreEditActivity extends Activity {
 			matrix.postScale(2.0f, 2.0f);
 		}
 		long start_time = System.currentTimeMillis();
+		public boolean checkEditStatus(){
+		    return isPenOP || isDuiOP || isBanduiOP || isWrongOP;
+        }
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			ScalePoint sp = getOffsetXY();
@@ -1818,8 +1821,13 @@ public class CorrectScoreEditActivity extends Activity {
 						//return true;
 						downx = (downx - sp.offset_x)/sp.rate;
 						downy = (downy - sp.offset_y)/sp.rate;
+					}else{
+						mode = DRAG;
+						savedMatrix.set(matrix);
+						imageView.setScaleType(ImageView.ScaleType.MATRIX);
+						startPoint.set(event.getX(), event.getY());
 					}
-					Log.v("YJ", "单点ACTION_DOWN操作");
+					Log.v("YJ", "单点ACTION_DOWN操作 mode=" + String.valueOf(mode));
 					break;
 				case MotionEvent.ACTION_UP:
                     if(mode == ZOOM){
@@ -1901,11 +1909,15 @@ public class CorrectScoreEditActivity extends Activity {
 				    break;
 
 				case MotionEvent.ACTION_MOVE:
-					if(mode == DRAG){
-						//matrix.set(savedMatrix);
-						//matrix.postTranslate(event.getX() - startPoint.x, event.getY() - startPoint.y);
+					if(mode == DRAG && !this.checkEditStatus()){
+						matrix.set(savedMatrix);
+						matrix.postTranslate(event.getX() - startPoint.x, event.getY() - startPoint.y);
+						imageView.setImageMatrix(matrix);
+						imageViewFace.setImageMatrix(matrix);
+						Log.v("YJ", "拖动图片");
+						break;
 					}
-					else if(mode == ZOOM){
+					else if(mode == ZOOM && !this.checkEditStatus()){
 
 						try{
 							float newDist = distance(event);
@@ -1917,7 +1929,7 @@ public class CorrectScoreEditActivity extends Activity {
 									matrix.set(savedMatrix);
 									Log.v("YJ rate = ", ">>>>>>>>>>>>>>>>>>>>");
 									matrix.postScale(rate, rate, mid.x, mid.y);
-									matrix.postTranslate(event.getX() - startPoint.x, event.getY() - startPoint.y);
+									//matrix.postTranslate(event.getX() - startPoint.x, event.getY() - startPoint.y);
 									imageView.setImageMatrix(matrix);
 									imageViewFace.setImageMatrix(matrix);
 									break;
@@ -1928,7 +1940,7 @@ public class CorrectScoreEditActivity extends Activity {
 						}
 
 					}
-					if(isPenOP && mode != ZOOM){
+					if(isPenOP){
 						// 路径画板
 
 						isMarkBiaozhu = true;
